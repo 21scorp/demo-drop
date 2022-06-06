@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import { Outlet, Link } from "react-router-dom";
 import './App.css';
 function App() {
   return (
@@ -12,14 +12,13 @@ function App() {
 
         <body>
         <div className="App-header">
-          <nav>
-            <ul id="mainMenu">
-              <li><a href="">Login</a></li>
-              <li><a href="">Registratie</a></li>
-              <li><a href="">Profiel</a></li>
-              <li><a href="">Demo-drop</a></li>
-            </ul>
+          <nav id="mainMenu">
+            <Link to="/Login">Login</Link>
+            <Link to="/Registratie">Registratie</Link>
+            <Link to="/Profiel">Profiel</Link>
+            <Link to="/Demo-drop">Demo-drop</Link>
           </nav>
+          <Outlet />
         </div>
         </body>
     </div>
