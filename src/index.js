@@ -11,18 +11,18 @@ import DemoDrop from "./routes/DemoDrop";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
-  <React.StrictMode>
+    <React.StrictMode>
       <BrowserRouter>
           <Routes>
               <Route path="/" element={<App />}>
                   <Route path="login" element={<Login />} />
                   <Route path="registratie" element={<Registratie />} />
                   <Route path="profiel" element={<Profiel />} />
-                  <Route path="demodrop" element={<DemoDrop />} />
+                  <Route path="demo-drop" element={<DemoDrop />} />
               </Route>
           </Routes>
       </BrowserRouter>
-  </React.StrictMode>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

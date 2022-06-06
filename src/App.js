@@ -10,7 +10,7 @@ function App() {
         </p>
       </header>
 
-        <body>
+
         <div className="App-header">
           <nav id="mainMenu">
             <Link to="/Login">Login</Link>
@@ -20,7 +20,6 @@ function App() {
           </nav>
           <Outlet />
         </div>
-        </body>
     </div>
   );
 }
