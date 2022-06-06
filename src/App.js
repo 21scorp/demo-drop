@@ -4,14 +4,15 @@ function App() {
   return (
     <div className="App">
       <header className="App-background">
-
         <p id="welcome">
           Welcome to DJ Don Diablo - Promo Delivery System
         </p>
+
       </header>
 
 
         <div className="App-header">
+
           <nav id="mainMenu">
             <Link to="/Login">Login</Link>
             <Link to="/Registratie">Registratie</Link>
