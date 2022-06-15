@@ -1,6 +1,6 @@
 import './Login.css';
 import {useState} from "react";
-import './UserInfo';
+import axios from "axios";
 import Profiel from "./Profiel";
 import {redirect} from "react-router-dom"
 
@@ -14,12 +14,18 @@ import {redirect} from "react-router-dom"
 
 
 export default function Login() { document.getElementById("welcome").style.display = "none";
+
+
+
+
+
     const [errorMessages, setErrorMessages] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
     const renderErrorMessage = (name) =>
         name === errorMessages.name && (
             <div className="error">{errorMessages.message}</div>
         );
+
     // User Login info
     const database = [
         {
@@ -37,13 +43,18 @@ export default function Login() { document.getElementById("welcome").style.displ
         pass: "Verkeerd wachtwoord"
     };
 
+    const succesmess = {
+        succ: "Je bent ingelogd!"
+    }
 
 
 
-    const handleSubmit = (event) => {
+
+        const handleSubmit = (event) => {
+
 
         //Prevent page reload
-        event.preventDefault();
+            event.preventDefault();
 
 
 
@@ -58,7 +69,7 @@ export default function Login() { document.getElementById("welcome").style.displ
                 // Invalid password
                 setErrorMessages({ name: "pass", message: errors.pass });
             } else {
-                setIsSubmitted(true);
+                setIsSubmitted(true)
             }
         } else {
             // Username not found
@@ -73,6 +84,8 @@ export default function Login() { document.getElementById("welcome").style.displ
     return (
         <main>
 
+
+
             <h2>Login</h2>
             <div className="vierkantbox">
                 <div className="vierkant">
@@ -86,6 +99,8 @@ export default function Login() { document.getElementById("welcome").style.displ
                             {renderErrorMessage("pass")}
                         </label>
                         <input id="button" type="submit" value="Login"/>
+
+
 
                     </form>
                 </div>
