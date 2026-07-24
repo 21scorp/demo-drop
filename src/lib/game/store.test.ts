@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { EVENTS } from "./config";
 import { createGameStore, type GameStore } from "./store";
 import { STORAGE_KEY } from "./save";
 
@@ -76,6 +77,32 @@ describe("flares", () => {
     const base = store.derived.energyPerSec;
     expect(base).toBeGreaterThan(0);
     expect(store.liveEps()).toBeGreaterThan(base);
+  });
+});
+
+describe("cosmic events", () => {
+  it("an active production event multiplies live eps", () => {
+    store.state.energy = 1e12;
+    store.buyGenerator("star", 10);
+    const base = store.derived.energyPerSec;
+    const alignment = EVENTS.find((e) => e.id === "alignment")!;
+    store.activeEvent = {
+      def: alignment,
+      startedAt: Date.now(),
+      expiresAt: Date.now() + alignment.durationMs,
+    };
+    expect(store.liveEps()).toBeCloseTo(base * (alignment.prodMult ?? 1));
+  });
+
+  it("a tap event multiplies live tap power", () => {
+    const before = store.liveTapPower();
+    const wind = EVENTS.find((e) => e.id === "cosmicwind")!;
+    store.activeEvent = {
+      def: wind,
+      startedAt: Date.now(),
+      expiresAt: Date.now() + wind.durationMs,
+    };
+    expect(store.liveTapPower()).toBeCloseTo(before * (wind.tapMult ?? 1));
   });
 });
 

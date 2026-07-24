@@ -6,7 +6,16 @@
  */
 
 import { getAudio, type AudioEngine } from "./audio";
-import { BASE_TAP, CONFIG } from "./config";
+import {
+  BASE_TAP,
+  CONFIG,
+  EVENTS,
+  EVENT_FIRST_MAX,
+  EVENT_FIRST_MIN,
+  EVENT_MIN_LIFETIME,
+  EVENT_STEADY_MAX,
+  EVENT_STEADY_MIN,
+} from "./config";
 import {
   buildUnlockCtx,
   buyGenerator as engBuyGenerator,
@@ -30,6 +39,7 @@ import {
 } from "./save";
 import type {
   ActiveBuff,
+  ActiveEvent,
   Derived,
   Flare,
   FlareKind,
@@ -73,6 +83,7 @@ export class GameStore {
   flares: Flare[] = [];
   buffs: ActiveBuff[] = [];
   toasts: Toast[] = [];
+  activeEvent: ActiveEvent | null = null;
   combo = 0;
   comboMult = 1;
   pendingOffline: OfflineReport | null = null;
@@ -85,6 +96,7 @@ export class GameStore {
   private lastSave = 0;
   private comboExpires = 0;
   private nextFlareAt = 0;
+  private nextEventAt = 0;
   private idSeq = 1;
   private listeners = new Set<() => void>();
   private tick = 0;
@@ -100,6 +112,7 @@ export class GameStore {
     this.mult = computeMultipliers(this.state, CONFIG);
     this.derived = computeDerived(this.state, CONFIG);
     this.scheduleNextFlare(this.now);
+    this.scheduleNextEvent(this.now, true);
     if (loaded) this.applyOffline(this.now);
     this.evaluateDaily(this.now);
   }
@@ -139,16 +152,27 @@ export class GameStore {
     return m;
   }
 
-  /** Live energy/sec including temporary buffs. */
-  liveEps(): number {
-    return this.derived.energyPerSec * this.prodBuffMult();
+  private eventProdMult(): number {
+    return this.activeEvent?.def.prodMult ?? 1;
+  }
+  private eventTapMult(): number {
+    return this.activeEvent?.def.tapMult ?? 1;
+  }
+  private eventFlareFreqMult(): number {
+    return this.activeEvent?.def.flareFreqMult ?? 1;
   }
 
-  /** Live tap power including combo + buffs. */
+  /** Live energy/sec including temporary buffs and events. */
+  liveEps(): number {
+    return this.derived.energyPerSec * this.prodBuffMult() * this.eventProdMult();
+  }
+
+  /** Live tap power including combo, buffs and events. */
   liveTapPower(): number {
     return (
       engTapPower(this.state, CONFIG, this.derived.energyPerSec, this.mult, this.comboMult) *
-      this.tapBuffMult()
+      this.tapBuffMult() *
+      this.eventTapMult()
     );
   }
 
@@ -211,6 +235,18 @@ export class GameStore {
     if (this.now >= this.nextFlareAt) this.spawnFlare(this.now);
     if (this.flares.length) {
       this.flares = this.flares.filter((f) => f.bornAt + f.ttl > this.now);
+    }
+
+    // Cosmic events
+    if (this.activeEvent && this.now >= this.activeEvent.expiresAt) {
+      this.activeEvent = null;
+      this.scheduleNextEvent(this.now, false);
+    } else if (
+      !this.activeEvent &&
+      this.now >= this.nextEventAt &&
+      this.state.lifetimeEnergy >= EVENT_MIN_LIFETIME
+    ) {
+      this.triggerEvent(this.now);
     }
 
     // To* expiry
@@ -322,7 +358,7 @@ export class GameStore {
   private scheduleNextFlare(now: number) {
     const ge = this.goldenEyeLevel();
     const base = 26_000 + Math.random() * 30_000; // 26–56s
-    const interval = Math.max(10_000, base * (1 - 0.1 * ge));
+    const interval = Math.max(10_000, base * (1 - 0.1 * ge)) / this.eventFlareFreqMult();
     this.nextFlareAt = now + interval;
   }
 
@@ -334,6 +370,41 @@ export class GameStore {
       r -= w;
     }
     return "surge";
+  }
+
+  /* ── cosmic events ─────────────────────────────────────────────────────── */
+
+  private scheduleNextEvent(now: number, first: boolean) {
+    const min = first ? EVENT_FIRST_MIN : EVENT_STEADY_MIN;
+    const max = first ? EVENT_FIRST_MAX : EVENT_STEADY_MAX;
+    this.nextEventAt = now + min + Math.random() * (max - min);
+  }
+
+  private triggerEvent(now: number) {
+    const total = EVENTS.reduce((a, e) => a + e.weight, 0);
+    let r = Math.random() * total;
+    let def = EVENTS[0]!;
+    for (const e of EVENTS) {
+      if (r < e.weight) {
+        def = e;
+        break;
+      }
+      r -= e.weight;
+    }
+    this.activeEvent = { def, startedAt: now, expiresAt: now + def.durationMs };
+    if (def.instantProdSeconds) {
+      this.grantEnergy(this.liveEps() * def.instantProdSeconds);
+    }
+    this.audio.flare("jackpot");
+    this.pushToast({
+      kind: "prestige",
+      title: def.name,
+      body: def.description,
+      glyph: def.glyph,
+    });
+    this.scheduleNextEvent(now, false);
+    this.recompute();
+    this.notify();
   }
 
   private spawnFlare(now: number) {
@@ -579,6 +650,8 @@ export class GameStore {
     this.comboMult = 1;
     this.buffs = [];
     this.flares = [];
+    this.activeEvent = null;
+    this.scheduleNextEvent(Date.now(), true);
     this.recompute();
     this.save();
     this.notify();
@@ -592,6 +665,8 @@ export class GameStore {
     this.comboMult = 1;
     this.buffs = [];
     this.flares = [];
+    this.activeEvent = null;
+    this.scheduleNextEvent(Date.now(), true);
     this.pendingOffline = null;
     this.audio.setSfxVolume(this.state.settings.sfxVolume);
     this.audio.setMusicVolume(this.state.settings.musicVolume);

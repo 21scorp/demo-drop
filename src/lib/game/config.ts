@@ -1,6 +1,7 @@
 import type {
   AchievementDef,
   GameConfig,
+  GameEvent,
   GeneratorDef,
   SkillDef,
   SkinDef,
@@ -205,6 +206,57 @@ export const SKINS: SkinDef[] = [
   { id: "aurora", name: "Aurora (Supporter)", colors: ["#67e8f9", "#a855f7", "#22c55e"], supporter: true },
   { id: "gold", name: "24K Singularity (Supporter)", colors: ["#fff7cc", "#facc15", "#a16207"], supporter: true },
 ];
+
+/* ────────────────────────────────────────────────────────────────────────
+ *  Cosmic Events — rare, announced, high-impact modifiers.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+export const EVENTS: GameEvent[] = [
+  {
+    id: "alignment",
+    name: "Star Alignment",
+    description: "The heavens line up — all production ×3.",
+    glyph: "🌟",
+    durationMs: 120_000,
+    prodMult: 3,
+    weight: 30,
+  },
+  {
+    id: "meteors",
+    name: "Meteor Shower",
+    description: "Solar Flares rain down far more often.",
+    glyph: "☄️",
+    durationMs: 180_000,
+    flareFreqMult: 4,
+    weight: 28,
+  },
+  {
+    id: "cosmicwind",
+    name: "Cosmic Wind",
+    description: "A charged gust — tap power ×6.",
+    glyph: "💨",
+    durationMs: 90_000,
+    tapMult: 6,
+    weight: 24,
+  },
+  {
+    id: "timewarp",
+    name: "Time Warp",
+    description: "Ten minutes of production, in an instant.",
+    glyph: "🕳️",
+    durationMs: 6_000,
+    instantProdSeconds: 600,
+    weight: 18,
+  },
+];
+
+/** Trigger no earlier than this lifetime energy (so new players aren't confused). */
+export const EVENT_MIN_LIFETIME = 2_000;
+/** First event window (ms) and steady-state window after that. */
+export const EVENT_FIRST_MIN = 4 * 60_000;
+export const EVENT_FIRST_MAX = 7 * 60_000;
+export const EVENT_STEADY_MIN = 14 * 60_000;
+export const EVENT_STEADY_MAX = 26 * 60_000;
 
 export const CONFIG: GameConfig = {
   generators: GENERATORS,

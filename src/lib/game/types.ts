@@ -201,6 +201,30 @@ export interface ActiveBuff {
   expiresAt: number;
 }
 
+/** A rare, announced, high-impact modifier (bigger and rarer than a flare buff). */
+export interface GameEvent {
+  id: string;
+  name: string;
+  description: string;
+  glyph: string;
+  durationMs: number;
+  /** Multipliers applied while active. */
+  prodMult?: number;
+  tapMult?: number;
+  /** Flares spawn this many times more often while active. */
+  flareFreqMult?: number;
+  /** One-off grant of N seconds of current production on trigger. */
+  instantProdSeconds?: number;
+  /** Selection weight. */
+  weight: number;
+}
+
+export interface ActiveEvent {
+  def: GameEvent;
+  startedAt: number;
+  expiresAt: number;
+}
+
 export type ToastKind = "unlock" | "achievement" | "flare" | "info" | "prestige";
 
 export interface Toast {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Core } from "./Core";
 import { DailyButton } from "./DailyButton";
+import { EventBanner } from "./EventBanner";
 import { FlareLayer } from "./FlareLayer";
 import { GameShell } from "./GameShell";
 import { useStore } from "./GameProvider";
@@ -54,6 +55,7 @@ export function PlayScreen() {
         </aside>
       </main>
 
+      <EventBanner />
       <FlareLayer />
       <ToastLayer />
       <OfflineModal />
