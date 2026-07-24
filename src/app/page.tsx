@@ -217,7 +217,10 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-5">
             <Link href="/guide" className="hover:text-ink">
-              Strategy guide
+              Guide
+            </Link>
+            <Link href="/faq" className="hover:text-ink">
+              FAQ
             </Link>
             <Link href="/play" className="hover:text-ink">
               Play
