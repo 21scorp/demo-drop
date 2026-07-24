@@ -76,6 +76,8 @@ export function FlareLayer() {
     [store, burst],
   );
 
+  const firstEver = store.state.stats.flaresCollected === 0;
+
   return (
     <div ref={layerRef} className="pointer-events-none fixed inset-0 z-50">
       {store.flares.map((f) => {
@@ -104,6 +106,11 @@ export function FlareLayer() {
             <span className="relative text-3xl drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
               {GLYPH[f.kind]}
             </span>
+            {firstEver && (
+              <span className="absolute left-1/2 top-full mt-1 -translate-x-1/2 animate-pulse whitespace-nowrap rounded-full bg-warning/90 px-2 py-0.5 text-[11px] font-bold text-black">
+                Tap the flare!
+              </span>
+            )}
           </button>
         );
       })}

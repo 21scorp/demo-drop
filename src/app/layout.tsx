@@ -30,12 +30,14 @@ export const metadata: Metadata = {
       "A hypnotic idle game. Tap, ignite the cosmos, catch Solar Flares, go Supernova. Free, instant, no signup.",
     url: APP_URL,
     siteName: "SUPERNOVA",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "SUPERNOVA — tap a spark, build a universe." }],
   },
   twitter: {
     card: "summary_large_image",
     title: "SUPERNOVA — Tap a spark. Build a universe.",
     description:
       "A hypnotic idle game. Tap, ignite the cosmos, catch Solar Flares, go Supernova. Free, instant, no signup.",
+    images: ["/og.png"],
   },
   manifest: "/manifest.webmanifest",
   icons: {

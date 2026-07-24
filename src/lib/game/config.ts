@@ -189,8 +189,20 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   // Rate
   { id: "eps_1m", name: "Power Plant", glyph: "🏭", reward: 1.04, blurb: "Reach 1M energy/sec.", check: (c) => c.bestEnergyPerSec >= 1e6 },
   { id: "eps_1b", name: "Cosmic Grid", glyph: "🛰️", reward: 1.06, blurb: "Reach 1B energy/sec.", check: (c) => c.bestEnergyPerSec >= 1e9 },
+  { id: "eps_1t", name: "Singularity Grid", glyph: "🔌", reward: 1.08, blurb: "Reach 1T energy/sec.", check: (c) => c.bestEnergyPerSec >= 1e12 },
+  // Deep taps & energy
+  tapMilestone("tap_50000", "Unstoppable", "💥", 50000, 1.07),
+  energyMilestone("e_1e21", "Sextillionaire", "🌠", 1e21, 1.08),
+  energyMilestone("e_1e24", "Septillion Sun", "🌞", 1e24, 1.09),
+  // Endgame ownership
+  { id: "own_universe_1", name: "Genesis", glyph: "🌐", reward: 1.1, blurb: "Own a Universe.", check: (c) => (c.generators.universe ?? 0) >= 1 },
+  { id: "own_all", name: "The Architect", glyph: "🏛️", reward: 1.15, blurb: "Own at least one of every generator.", check: (c) => GENERATORS.every((g) => (c.generators[g.id] ?? 0) >= 1) },
+  // Deep prestige & flares
+  { id: "nova_50", name: "Ouroboros", glyph: "🐍", reward: 1.18, blurb: "Go Supernova 50 times.", check: (c) => c.supernovaCount >= 50 },
+  { id: "flare_250", name: "Flare Master", glyph: "🎆", reward: 1.09, blurb: "Collect 250 Solar Flares.", check: (c) => c.flaresCollected >= 250 },
   // Secret
   { id: "secret_patience", name: "The Long Now", glyph: "🕰️", reward: 1.1, secret: true, blurb: "Some rewards come only to those who wait.", check: (c) => c.stardust >= 100 },
+  { id: "secret_touchgrass", name: "Touch Grass", glyph: "🌱", reward: 1.12, secret: true, blurb: "Return to a full day of offline earnings.", check: (c) => c.taps >= 5000 && c.supernovaCount >= 5 },
 ];
 
 /* ────────────────────────────────────────────────────────────────────────
