@@ -51,7 +51,9 @@ export function SupernovaPanel() {
 
         <div className="mt-4 h-2 overflow-hidden rounded-full bg-surface-2">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-brand to-accent transition-[width] duration-300"
+            className={`h-full rounded-full bg-gradient-to-r from-brand to-accent transition-[width] duration-300 ${
+              !canNova && progress > 0.8 ? "animate-pulse" : ""
+            }`}
             style={{ width: `${progress * 100}%` }}
           />
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BuffAura } from "./BuffAura";
 import { Core } from "./Core";
 import { DailyButton } from "./DailyButton";
 import { EventBanner } from "./EventBanner";
@@ -24,6 +25,7 @@ export function PlayScreen() {
       </div>
       <div className="pointer-events-none absolute inset-0 bg-brand-glow opacity-70" />
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.35]" />
+      <BuffAura />
 
       {/* Top bar */}
       <header className="sticky top-0 z-40 border-b border-border/70 bg-bg/70 backdrop-blur-md">
