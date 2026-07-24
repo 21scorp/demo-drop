@@ -33,6 +33,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     s.start();
     setStore(s);
 
+    // Grant the Supporter Pack when returning from a successful checkout.
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("supporter") === "success") {
+        s.grantSupporter();
+        params.delete("supporter");
+        const qs = params.toString();
+        window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+      }
+    } catch {
+      /* ignore */
+    }
+
     const onVisibility = () => {
       if (document.hidden) s.pauseToBackground();
       else s.resumeFromBackground();

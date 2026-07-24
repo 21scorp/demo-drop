@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { energyForNextStardust, prestigeGain } from "@/lib/game/engine";
 import { fmt } from "@/lib/game/format";
+import { showInterstitial } from "@/lib/monetize";
 import { Button } from "@/components/ui/Button";
 import { useGameTick, useStore } from "./GameProvider";
 
@@ -79,8 +80,11 @@ export function SupernovaPanel() {
                 <Button
                   className="flex-1"
                   onClick={() => {
-                    store.doSupernova();
+                    const gained = store.doSupernova();
                     setConfirming(false);
+                    if (gained > 0 && store.state.supernovaCount % 3 === 0 && !store.state.supporter) {
+                      void showInterstitial();
+                    }
                   }}
                 >
                   Collapse now

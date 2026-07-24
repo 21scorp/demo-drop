@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CONFIG } from "@/lib/game/config";
 import type { Notation } from "@/lib/game/format";
+import { SUPPORTER_URL, hasSupporterCheckout } from "@/lib/monetize";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { useGameTick, useStore } from "./GameProvider";
@@ -154,7 +155,18 @@ export function SettingsPanel() {
         {s.supporter ? (
           <p className="mt-2 font-mono text-xs text-accent">✓ Active — thank you for the support!</p>
         ) : (
-          <Button size="sm" className="mt-3" onClick={() => store.grantSupporter()}>
+          <Button
+            size="sm"
+            className="mt-3"
+            onClick={() => {
+              if (hasSupporterCheckout()) {
+                const back = `${window.location.origin}/play?supporter=success`;
+                window.location.href = `${SUPPORTER_URL}${SUPPORTER_URL.includes("?") ? "&" : "?"}redirect=${encodeURIComponent(back)}`;
+              } else {
+                store.grantSupporter();
+              }
+            }}
+          >
             Unlock Supporter Pack
           </Button>
         )}

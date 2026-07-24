@@ -104,6 +104,20 @@ export function Core() {
     [handleTap],
   );
 
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        const el = coreRef.current;
+        if (el) {
+          const r = el.getBoundingClientRect();
+          handleTap(r.left + r.width / 2, r.top + r.height / 2);
+        }
+      }
+    },
+    [handleTap],
+  );
+
   const eps = store.liveEps();
   const tapPower = store.liveTapPower();
   const combo = store.combo;
@@ -142,6 +156,7 @@ export function Core() {
       <button
         ref={coreRef}
         onPointerDown={onPointerDown}
+        onKeyDown={onKeyDown}
         aria-label="Tap the core to generate energy"
         className="group relative grid aspect-square w-[min(58vw,300px)] place-items-center rounded-full outline-none"
         style={{ touchAction: "manipulation" }}

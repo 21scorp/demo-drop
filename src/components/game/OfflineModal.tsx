@@ -1,6 +1,7 @@
 "use client";
 
 import { fmt, fmtDuration } from "@/lib/game/format";
+import { showRewardedAd } from "@/lib/monetize";
 import { Button } from "@/components/ui/Button";
 import { useGameTick, useStore } from "./GameProvider";
 
@@ -29,7 +30,12 @@ export function OfflineModal() {
         <p className="font-mono text-xs text-faint">energy earned offline</p>
 
         <div className="mt-6 flex flex-col gap-2">
-          <Button onClick={() => store.claimOffline(true)}>
+          <Button
+            onClick={async () => {
+              const rewarded = await showRewardedAd();
+              store.claimOffline(rewarded);
+            }}
+          >
             ▶ Double it (watch a short ad)
           </Button>
           <Button variant="ghost" size="sm" onClick={() => store.claimOffline(false)}>
