@@ -1,71 +1,74 @@
-# DemoDrop — Project Plan & Roadmap
+# SUPERNOVA — Project Plan & Roadmap
 
-**Product:** DemoDrop — get your music heard by DJs, labels & playlist curators, with guaranteed feedback.
-**Model:** Artists buy credits → spend them submitting tracks to curators → curators give guaranteed feedback → platform takes commission, curators earn a share.
+**Product:** SUPERNOVA — an idle/incremental game. Tap a spark, build a universe, go
+Supernova, do it again — bigger. Fully client-side, free to host, monetizes via ads +
+a Supporter Pack.
 
 Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 0 — Foundation
-- [x] Master prompt + roadmap
-- [x] Decide stack (Next.js + TS + Tailwind + Prisma + Stripe)
-- [ ] Scaffold Next.js app, tooling, config
-- [ ] Design system (tokens, Tailwind theme, base UI components)
+- [x] Master prompt + roadmap (repointed to SUPERNOVA)
+- [x] Stack: Next.js + TS + Tailwind (lean, no backend), design tokens
+- [ ] Root layout, fonts, metadata; utils (cn, format)
 
-## Phase 1 — Data & domain
-- [ ] Prisma schema: User, ArtistProfile, CuratorProfile, Submission, Review, CreditLedger, Transaction, Payout
-- [ ] Seed script: realistic curators (DJs, labels, playlists), genres, demo artists
-- [ ] Domain services: credits, submissions, reviews, guarantee/refund logic (integer-cent money math)
+## Phase 1 — Engine (pure, testable)
+- [ ] `types.ts` — game state, generators, upgrades, achievements
+- [ ] `format.ts` — big-number formatting (K/M/B/T/… → scientific), time, rates
+- [ ] `config.ts` — content: generator tiers, upgrades, achievements, balance curves
+- [ ] `engine.ts` — cost/bulk-cost, production/sec, tick, buy, prestige math, offline
+- [ ] `save.ts` — Zod schema, versioning/migration, serialize, export/import
+- [ ] Unit tests for engine + format + save
 
-## Phase 2 — Auth & accounts
-- [ ] Password hashing (scrypt), session cookies, JWT
-- [ ] Sign up (artist/curator), login, logout, protected routes, role guards
-- [ ] Zod validation on all auth inputs
+## Phase 2 — Runtime & feel
+- [ ] `audio.ts` — WebAudio synth (tap tones, combo pitch, flare, milestone fanfare)
+- [ ] `useGame` hook — RAF loop, refs↔snapshot, autosave, offline catch-up, actions
+- [ ] Particle + floating-number system (performant, DOM/canvas)
 
-## Phase 3 — Artist experience
-- [ ] Curator directory (filter by genre, type, price, rating)
-- [ ] Curator detail page
-- [ ] Submit-a-track flow (link + pitch, credit cost, confirm)
-- [ ] Artist dashboard: submissions, statuses, feedback, credit balance & ledger
+## Phase 3 — Core play (the fun slice)
+- [ ] The Core: big tappable star with juice (particles, shake, glow, sound)
+- [ ] Energy HUD (amount, per-second, per-tap), combo meter
+- [ ] Generator list: buy x1/x10/xMax, cost, output, owned, unlock gating
+- [ ] Solar Flare spawns + collect surge (variable reward)
+- [ ] Toasts (unlocks, achievements, events)
 
-## Phase 4 — Curator experience
-- [ ] Curator onboarding & editable profile
-- [ ] Inbox / review queue with SLA countdown
-- [ ] Review flow: rating, written feedback, decision (repost/playlist/pass), earnings
-- [ ] Curator dashboard: stats, response rate, earnings & payouts
+## Phase 4 — Progression & meta
+- [ ] Upgrades panel (per-generator + global multipliers, unlock conditions)
+- [ ] Supernova (prestige): preview stardust, confirm, reset, permanent boost
+- [ ] Stardust skill tree (spend stardust on permanent perks)
+- [ ] Achievements panel + rewards
+- [ ] Daily bonus + streak
+- [ ] Offline earnings "welcome back" modal
 
-## Phase 5 — Monetization
-- [ ] Credit packs & pricing page
-- [ ] Stripe Checkout (credit packs + Pro subscription), webhooks → ledger
-- [ ] Commission / curator-share accounting; payout records
-- [ ] Guarantee engine: auto-refund on missed SLA (cron/route)
+## Phase 5 — Shell & polish
+- [ ] Landing page (hero, live demo teaser, features, CTA, SEO/OG)
+- [ ] Game shell: tabs (Cosmos / Upgrades / Skills / Stats / Settings)
+- [ ] Stats page (lifetime numbers, run stats)
+- [ ] Settings (sound/music volume, reduced motion, notation, export/import, hard reset)
+- [ ] Responsive + mobile tap ergonomics + a11y + reduced-motion
+- [ ] PWA (manifest, service worker, installable, offline)
 
-## Phase 6 — Marketing site & SEO
-- [ ] Landing page: hero, social proof, how-it-works, curator preview, pricing, FAQ, CTA
-- [ ] For-curators landing, pricing page, legal (terms/privacy)
-- [ ] SEO: metadata, OpenGraph, sitemap, robots, structured data, blog scaffold
+## Phase 6 — Monetize & ship
+- [ ] Ad seams (rewarded "flare boost" + interstitial on prestige) — stubbed, documented
+- [ ] Supporter Pack (remove ads, cosmetic star skins, +permanent boost) — payment-link seam
+- [ ] Cosmetic star/theme skins (some free, some Supporter)
+- [ ] Share card (canvas image of your universe + stats)
+- [ ] README, DEPLOY (Vercel), MONETIZATION playbook, GAME-DESIGN doc
 
-## Phase 7 — Quality & delivery
-- [ ] Vitest tests for credits, guarantee/refund, auth, commission math
-- [ ] Error handling, empty states, loading states, toasts
-- [ ] Accessibility pass, responsive pass
-- [ ] Dockerfile + docker-compose, CI workflow
-- [ ] README, DEPLOY guide, MONETIZATION playbook, ARCHITECTURE doc
+## Phase 7+ — Depth (never run out)
+- [ ] More generator tiers + upgrade branches; rebalance curves
+- [ ] Second prestige layer (e.g., "Multiverse") for very-late game
+- [ ] Timed events / challenges (limited modifiers for bonus rewards)
+- [ ] More achievements; secret achievements
+- [ ] Golden-flare variants (frenzy, cash-out, click-power)
+- [ ] Generative ambient audio that reacts to production
+- [ ] Optional cloud save / global leaderboard (later; needs tiny backend)
+- [ ] Analytics hook (privacy-friendly) for the owner
+- [ ] Copy polish, onboarding, tutorial beats, tooltips
+- [ ] Performance passes; big-number safety (beyond 1e308 via mantissa/exp)
 
-## Phase 8+ — Depth (never run out of work)
-- [ ] Admin panel: moderation, curator approvals, platform stats
-- [ ] Email notifications (submission received, feedback ready, SLA warnings)
-- [ ] Analytics dashboards (conversion, response times, top genres)
-- [ ] Referral / affiliate program (artists & curators)
-- [ ] Playlists & "wins" showcase (breakthroughs → social proof)
-- [ ] Ratings & reputation, curator verification badges
-- [ ] i18n (EN/NL), PWA/offline, performance budget
-- [ ] Fraud/abuse guards, rate limiting, audit log
-- [ ] Blog content for SEO (music-promo guides)
-- [ ] Polish passes: micro-interactions, motion, copy editing
-
-## Revenue math (illustrative)
-- Credit pack: €10 = 100 credits. Average submission = 20 credits (€2 value).
-- Curator share ~ 50% of the credit value on a completed review; platform keeps ~50%.
-- Pro subscription: €9/mo (analytics, priority, 10% credit bonus).
-- 1,000 active artists × 4 submissions/mo × €2 × 50% commission ≈ €4,000/mo gross,
-  before Pro subs and curator-side growth. Scales with curator supply.
+## Monetization model (for the owner)
+- **Traffic**: SEO landing + shareable results → organic. Free to play, instant, no signup.
+- **Ads**: rewarded video (optional boosts) + light interstitial on prestige (AdSense/other).
+- **Supporter Pack**: one-time purchase (Stripe payment link / Gumroad) — removes ads,
+  unlocks cosmetic skins, small permanent boost.
+- **Zero server cost** → ~100% margin on ad + IAP revenue. Scales with players.
