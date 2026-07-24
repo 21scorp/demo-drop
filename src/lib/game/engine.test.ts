@@ -281,6 +281,21 @@ describe("offline", () => {
     expect(res.creditedMs).toBe(24 * 3_600_000); // 24h base cap
     expect(res.cappedMs).toBeGreaterThan(0);
   });
+
+  it("Timeless skill raises efficiency and extends the cap", () => {
+    const base = fresh();
+    base.generators.star = 100;
+    const skilled = fresh();
+    skilled.generators.star = 100;
+    skilled.skills.offline = 3; // +36% efficiency, +36h cap
+    const oneHour = 3_600_000;
+    const b = computeOffline(base, CONFIG, oneHour);
+    const k = computeOffline(skilled, CONFIG, oneHour);
+    expect(k.gained).toBeGreaterThan(b.gained);
+    // cap extends: a 40h absence credits more than the base 24h cap
+    const long = computeOffline(skilled, CONFIG, 40 * 3_600_000);
+    expect(long.creditedMs).toBeGreaterThan(24 * 3_600_000);
+  });
 });
 
 describe("derived snapshot", () => {

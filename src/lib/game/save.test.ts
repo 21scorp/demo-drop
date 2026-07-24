@@ -28,6 +28,8 @@ describe("serialize round-trip", () => {
     s.upgrades = ["g_cosmic1"];
     s.skills = { core: 2 };
     s.stardust = 17;
+    s.darkMatter = 6;
+    s.singularityCount = 2;
     const back = deserialize(serialize(s), 2000)!;
     expect(back).not.toBeNull();
     expect(back.energy).toBeCloseTo(123456.789);
@@ -35,6 +37,8 @@ describe("serialize round-trip", () => {
     expect(back.upgrades).toEqual(["g_cosmic1"]);
     expect(back.skills.core).toBe(2);
     expect(back.stardust).toBe(17);
+    expect(back.darkMatter).toBe(6);
+    expect(back.singularityCount).toBe(2);
   });
 });
 
