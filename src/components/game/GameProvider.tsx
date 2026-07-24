@@ -33,6 +33,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     s.start();
     setStore(s);
 
+    // Power-user / debug console handle (the game is client-side anyway).
+    (window as unknown as { SUPERNOVA?: unknown }).SUPERNOVA = s;
+    try {
+      // eslint-disable-next-line no-console
+      console.log(
+        "%c✦ SUPERNOVA",
+        "color:#a78bfa;font-size:22px;font-weight:800",
+        "\nCurious? `window.SUPERNOVA` is the live game store. Tinker at your own risk. ✨",
+      );
+    } catch {
+      /* noop */
+    }
+
     // Grant the Supporter Pack when returning from a successful checkout.
     try {
       const params = new URLSearchParams(window.location.search);
