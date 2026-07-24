@@ -501,6 +501,15 @@ export class GameStore {
 
   /* ── achievements ──────────────────────────────────────────────────────── */
 
+  /** Re-sync celebration trackers to the current state (after load/import/reset). */
+  private reindexCelebrations() {
+    const ctx = buildUnlockCtx(this.state);
+    this.knownGenerators = new Set();
+    for (const g of CONFIG.generators) if (g.unlock(ctx)) this.knownGenerators.add(g.id);
+    this.lastScaleTier = this.scaleTier(this.state.lifetimeEnergy);
+    this.lastPrestige = null;
+  }
+
   /** Order-of-1000 tier of a value (0 = <1K, 1 = K, 2 = M, …). */
   private scaleTier(v: number): number {
     if (v < 1000) return 0;
@@ -741,6 +750,7 @@ export class GameStore {
     this.flares = [];
     this.activeEvent = null;
     this.scheduleNextEvent(Date.now(), true);
+    this.reindexCelebrations();
     this.recompute();
     this.save();
     this.notify();
@@ -756,6 +766,7 @@ export class GameStore {
     this.flares = [];
     this.activeEvent = null;
     this.scheduleNextEvent(Date.now(), true);
+    this.reindexCelebrations();
     this.pendingOffline = null;
     this.audio.setSfxVolume(this.state.settings.sfxVolume);
     this.audio.setMusicVolume(this.state.settings.musicVolume);
