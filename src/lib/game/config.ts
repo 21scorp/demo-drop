@@ -217,6 +217,11 @@ export const SKINS: SkinDef[] = [
   { id: "ice", name: "Ice Giant", colors: ["#a5f3fc", "#06b6d4", "#0e7490"], unlockSupernovas: 3 },
   { id: "rose", name: "Rose Nebula", colors: ["#fecdd3", "#f43f5e", "#881337"], unlockSupernovas: 8 },
   { id: "emerald", name: "Emerald Void", colors: ["#bbf7d0", "#10b981", "#064e3b"], unlockSupernovas: 15 },
+  { id: "obsidian", name: "Obsidian", colors: ["#94a3b8", "#334155", "#0f172a"], unlockSupernovas: 30 },
+  { id: "plasma", name: "Plasma Storm", colors: ["#fbcfe8", "#db2777", "#4a044e"], unlockSupernovas: 50 },
+  { id: "voidcore", name: "Void Core", colors: ["#a3e635", "#3f6212", "#0a0a0a"], unlockSingularities: 1 },
+  { id: "prism", name: "Prism", colors: ["#fca5a5", "#60a5fa", "#34d399"], unlockSingularities: 3 },
+  { id: "darkmatter", name: "Dark Matter", colors: ["#c4b5fd", "#4c1d95", "#020617"], unlockSingularities: 6 },
   { id: "aurora", name: "Aurora (Supporter)", colors: ["#67e8f9", "#a855f7", "#22c55e"], supporter: true },
   { id: "gold", name: "24K Singularity (Supporter)", colors: ["#fff7cc", "#facc15", "#a16207"], supporter: true },
 ];

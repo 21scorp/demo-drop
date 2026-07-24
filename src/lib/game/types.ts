@@ -95,6 +95,8 @@ export interface SkinDef {
   supporter?: boolean;
   /** Unlocked after N supernovas (0 = always). */
   unlockSupernovas?: number;
+  /** Unlocked after N singularities. */
+  unlockSingularities?: number;
 }
 
 export interface GameConfig {

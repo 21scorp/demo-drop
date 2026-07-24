@@ -189,4 +189,12 @@ describe("settings & cosmetics", () => {
     expect(store.setSkin("aurora")).toBe(true);
     expect(store.state.skin).toBe("aurora");
   });
+
+  it("gates singularity skins by singularity count", () => {
+    expect(store.setSkin("voidcore")).toBe(false); // needs 1 singularity
+    store.state.singularityCount = 1;
+    expect(store.setSkin("voidcore")).toBe(true);
+    expect(store.state.skin).toBe("voidcore");
+    expect(store.setSkin("darkmatter")).toBe(false); // needs 6
+  });
 });

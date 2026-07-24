@@ -682,6 +682,7 @@ export class GameStore {
     if (!skin) return false;
     if (skin.supporter && !this.state.supporter) return false;
     if (skin.unlockSupernovas && this.state.supernovaCount < skin.unlockSupernovas) return false;
+    if (skin.unlockSingularities && this.state.singularityCount < skin.unlockSingularities) return false;
     this.state.skin = id;
     this.save();
     this.notify();

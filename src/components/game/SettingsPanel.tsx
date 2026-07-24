@@ -79,7 +79,8 @@ export function SettingsPanel() {
           {CONFIG.skins.map((skin) => {
             const locked =
               (skin.supporter && !s.supporter) ||
-              (skin.unlockSupernovas ? s.supernovaCount < skin.unlockSupernovas : false);
+              (skin.unlockSupernovas ? s.supernovaCount < skin.unlockSupernovas : false) ||
+              (skin.unlockSingularities ? s.singularityCount < skin.unlockSingularities : false);
             const active = s.skin === skin.id;
             return (
               <button
@@ -94,7 +95,9 @@ export function SettingsPanel() {
                   locked
                     ? skin.supporter
                       ? "Supporter Pack"
-                      : `Unlocks at ${skin.unlockSupernovas} supernovas`
+                      : skin.unlockSingularities
+                        ? `Unlocks at ${skin.unlockSingularities} singularities`
+                        : `Unlocks at ${skin.unlockSupernovas} supernovas`
                     : skin.name
                 }
                 style={{
