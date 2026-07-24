@@ -14,6 +14,9 @@ import {
   maxAffordable,
   perGeneratorOutput,
   prestigeGain,
+  canSingularity,
+  singularity,
+  singularityGain,
   supernova,
   tapPower,
 } from "./engine";
@@ -188,6 +191,53 @@ describe("prestige", () => {
     supernova(s, CONFIG, 2_000_000);
     expect(s.generators.spark).toBe(20);
     expect(s.generators.ember).toBe(8);
+  });
+});
+
+describe("singularity (second prestige)", () => {
+  it("is gated behind supernova count and stardust earned", () => {
+    const s = fresh();
+    s.stardustEarned = 1e6;
+    s.supernovaCount = 3; // too few
+    expect(canSingularity(s)).toBe(false);
+    s.supernovaCount = 12;
+    expect(canSingularity(s)).toBe(true);
+    expect(singularityGain(s)).toBeGreaterThan(0);
+  });
+
+  it("banks dark matter and deep-resets stardust + skills", () => {
+    const s = fresh();
+    s.supernovaCount = 20;
+    s.stardustEarned = 20000;
+    s.stardust = 5000;
+    s.skills = { core: 5, overdrive: 3 };
+    s.generators = { spark: 100 };
+    s.upgrades = ["g_cosmic1"];
+    const gain = singularity(s, 999);
+    expect(gain).toBeGreaterThan(0);
+    expect(s.darkMatter).toBe(gain);
+    expect(s.singularityCount).toBe(1);
+    expect(s.stardust).toBe(0);
+    expect(s.stardustEarned).toBe(0);
+    expect(Object.keys(s.skills)).toHaveLength(0);
+    expect(Object.keys(s.generators)).toHaveLength(0);
+    // supernovaCount kept (cosmetics/achievements depend on it)
+    expect(s.supernovaCount).toBe(20);
+  });
+
+  it("dark matter permanently boosts production and stardust gain", () => {
+    const s = fresh();
+    s.generators.spark = 10;
+    const base = computeMultipliers(s, CONFIG).global;
+    s.darkMatter = 4;
+    const boosted = computeMultipliers(s, CONFIG).global;
+    expect(boosted).toBeCloseTo(base * (1 + 0.3 * 4));
+
+    const s2 = fresh();
+    s2.totalEnergyThisRun = 1e9;
+    const g0 = prestigeGain(s2);
+    s2.darkMatter = 5;
+    expect(prestigeGain(s2)).toBeGreaterThan(g0);
   });
 });
 

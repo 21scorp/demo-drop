@@ -8,6 +8,9 @@ import {
   BASE_OFFLINE_CAP_MS,
   BASE_OFFLINE_EFFICIENCY,
   BASE_TAP,
+  DARK_MATTER_GLOBAL,
+  DARK_MATTER_STARDUST,
+  SINGULARITY_MIN_SUPERNOVAS,
   TAP_PCT_PER_UPGRADE,
 } from "./config";
 import type {
@@ -37,6 +40,8 @@ export function buildUnlockCtx(state: GameState): UnlockCtx {
     totalEnergyThisRun: state.totalEnergyThisRun,
     stardust: state.stardust,
     supernovaCount: state.supernovaCount,
+    darkMatter: state.darkMatter,
+    singularityCount: state.singularityCount,
     generators: state.generators,
     upgrades: new Set(state.upgrades),
     achievements: new Set(state.achievements),
@@ -90,7 +95,8 @@ export function computeMultipliers(state: GameState, config: GameConfig): Multip
   }
   global *= 1 + 0.08 * skillLevel(state, "core");
   global *= 1 + 0.2 * skillLevel(state, "overdrive");
-  global *= 1 + 0.03 * state.stardustEarned; // permanent prestige power
+  global *= 1 + 0.03 * state.stardustEarned; // prestige power (this cycle)
+  global *= 1 + DARK_MATTER_GLOBAL * state.darkMatter; // singularity power (permanent)
   if (state.supporter) global *= 1.1;
 
   // Per-generator multipliers
@@ -168,7 +174,55 @@ export function prestigeGain(state: GameState): number {
   const raw = 3 * Math.pow(x / 1e6, 0.35);
   const inheritance = 1 + 0.06 * skillLevel(state, "inherit");
   const bang = 1 + 0.25 * skillLevel(state, "bang");
-  return Math.floor(raw * inheritance * bang);
+  const dm = 1 + DARK_MATTER_STARDUST * state.darkMatter;
+  return Math.floor(raw * inheritance * bang * dm);
+}
+
+/* ── singularity (second prestige) ───────────────────────────────────────── */
+
+/** Dark Matter you would gain by collapsing into a Singularity right now. */
+export function singularityGain(state: GameState): number {
+  if (state.stardustEarned <= 0) return 0;
+  return Math.floor(Math.pow(state.stardustEarned / 200, 0.5));
+}
+
+/** Whether a Singularity is available (deep enough + would yield ≥1 Dark Matter). */
+export function canSingularity(state: GameState): boolean {
+  return (
+    state.supernovaCount >= SINGULARITY_MIN_SUPERNOVAS && singularityGain(state) >= 1
+  );
+}
+
+/** Stardust-earned needed for the next whole Dark Matter point. */
+export function stardustForNextDarkMatter(state: GameState): number {
+  const next = singularityGain(state) + 1;
+  return 200 * next * next;
+}
+
+/**
+ * Collapse into a Singularity: bank Dark Matter and perform a DEEP reset —
+ * clears stardust, skills, generators, upgrades, and the current run — while
+ * keeping Dark Matter, supernova count (for cosmetics/achievements),
+ * achievements, cosmetics, settings, and lifetime stats. Mutates state.
+ */
+export function singularity(state: GameState, now: number): number {
+  const gain = singularityGain(state);
+  if (!canSingularity(state)) return 0;
+
+  state.darkMatter += gain;
+  state.singularityCount += 1;
+
+  // Deep reset.
+  state.stardust = 0;
+  state.stardustEarned = 0;
+  state.skills = {};
+  state.energy = 0;
+  state.totalEnergyThisRun = 0;
+  state.generators = {};
+  state.upgrades = [];
+  state.runStartedAt = now;
+
+  return gain;
 }
 
 /** Energy needed this run before a Supernova yields at least 1 Stardust. */

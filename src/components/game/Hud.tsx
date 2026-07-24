@@ -74,6 +74,14 @@ export function Hud() {
             tone={b.kind === "frenzy" ? "#f59e0b" : "#a3e635"}
           />
         ))}
+        {s.darkMatter > 0 && (
+          <div className="flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1.5">
+            <span className="text-base leading-none text-accent">◆</span>
+            <span className="font-mono text-sm font-semibold tabular-nums text-accent">
+              {fmt(s.darkMatter, notation)}
+            </span>
+          </div>
+        )}
         <div className="flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1.5">
           <span className="text-base leading-none">✦</span>
           <span className="font-mono text-sm font-semibold tabular-nums text-brand">

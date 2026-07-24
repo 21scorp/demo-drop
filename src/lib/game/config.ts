@@ -199,6 +199,8 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "own_all", name: "The Architect", glyph: "🏛️", reward: 1.15, blurb: "Own at least one of every generator.", check: (c) => GENERATORS.every((g) => (c.generators[g.id] ?? 0) >= 1) },
   // Deep prestige & flares
   { id: "nova_50", name: "Ouroboros", glyph: "🐍", reward: 1.18, blurb: "Go Supernova 50 times.", check: (c) => c.supernovaCount >= 50 },
+  { id: "sing_1", name: "Event Horizon", glyph: "◆", reward: 1.2, blurb: "Collapse into your first Singularity.", check: (c) => c.singularityCount >= 1 },
+  { id: "sing_5", name: "Master of Dimensions", glyph: "🔮", reward: 1.25, blurb: "Reach 5 Singularities.", check: (c) => c.singularityCount >= 5 },
   { id: "flare_250", name: "Flare Master", glyph: "🎆", reward: 1.09, blurb: "Collect 250 Solar Flares.", check: (c) => c.flaresCollected >= 250 },
   // Secret
   { id: "secret_patience", name: "The Long Now", glyph: "🕰️", reward: 1.1, secret: true, blurb: "Some rewards come only to those who wait.", check: (c) => c.stardust >= 100 },
@@ -269,6 +271,17 @@ export const EVENT_FIRST_MIN = 4 * 60_000;
 export const EVENT_FIRST_MAX = 7 * 60_000;
 export const EVENT_STEADY_MIN = 14 * 60_000;
 export const EVENT_STEADY_MAX = 26 * 60_000;
+
+/* ────────────────────────────────────────────────────────────────────────
+ *  Singularity — the second prestige layer.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/** Supernovas required before the Singularity unlocks. */
+export const SINGULARITY_MIN_SUPERNOVAS = 12;
+/** Each Dark Matter grants this much global production bonus (e.g. 0.3 = +30%). */
+export const DARK_MATTER_GLOBAL = 0.3;
+/** Each Dark Matter grants this much bonus to Stardust gained on Supernova. */
+export const DARK_MATTER_STARDUST = 0.1;
 
 export const CONFIG: GameConfig = {
   generators: GENERATORS,

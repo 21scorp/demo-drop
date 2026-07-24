@@ -26,6 +26,9 @@ import {
   computeOffline,
   newlyUnlockedAchievements,
   prestigeGain,
+  canSingularity as engCanSingularity,
+  singularity as engSingularity,
+  singularityGain as engSingularityGain,
   supernova as engSupernova,
   tapPower as engTapPower,
 } from "./engine";
@@ -622,6 +625,37 @@ export class GameStore {
       title: `Supernova! +${gain} Stardust`,
       body: "The universe collapses… and begins again, stronger.",
       glyph: "💥",
+    });
+    this.recompute();
+    this.save();
+    this.notify();
+    return gain;
+  }
+
+  canSingularity(): boolean {
+    return engCanSingularity(this.state);
+  }
+  singularityGain(): number {
+    return engSingularityGain(this.state);
+  }
+
+  doSingularity(): number {
+    if (!this.canSingularity()) {
+      this.audio.denied();
+      return 0;
+    }
+    const gain = engSingularity(this.state, Date.now());
+    this.combo = 0;
+    this.comboMult = 1;
+    this.buffs = [];
+    this.flares = [];
+    this.activeEvent = null;
+    this.audio.prestige();
+    this.pushToast({
+      kind: "prestige",
+      title: `Singularity! +${gain} ◆ Dark Matter`,
+      body: "Everything collapses to a point — and the whole story begins anew, far stronger.",
+      glyph: "◆",
     });
     this.recompute();
     this.save();

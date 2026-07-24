@@ -11,6 +11,8 @@ export interface UnlockCtx {
   totalEnergyThisRun: number;
   stardust: number;
   supernovaCount: number;
+  darkMatter: number;
+  singularityCount: number;
   generators: Record<string, number>;
   upgrades: Set<string>;
   achievements: Set<string>;
@@ -131,7 +133,11 @@ export interface GameState {
   totalEnergyThisRun: number; // resets each supernova — drives prestige gain
   lifetimeEnergy: number; // never resets
   stardust: number; // current spendable prestige currency
-  stardustEarned: number; // lifetime stardust — powers the permanent prestige bonus
+  stardustEarned: number; // stardust earned this singularity-cycle — powers the prestige bonus
+
+  // Second prestige layer (Singularity)
+  darkMatter: number; // permanent meta-currency; each point boosts everything
+  singularityCount: number;
 
   // Production
   generators: Record<string, number>; // id -> owned count
