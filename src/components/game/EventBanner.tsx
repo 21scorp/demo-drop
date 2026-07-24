@@ -16,7 +16,11 @@ export function EventBanner() {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-[8.75rem] z-[65] flex justify-center px-4">
-      <div className="pointer-events-auto relative w-full max-w-md animate-scale-in overflow-hidden rounded-xl border border-brand/50 bg-surface/90 px-4 py-3 shadow-lift backdrop-blur-md">
+      <div
+        role="status"
+        aria-live="polite"
+        className="pointer-events-auto relative w-full max-w-md animate-scale-in overflow-hidden rounded-xl border border-brand/50 bg-surface/90 px-4 py-3 shadow-lift backdrop-blur-md"
+      >
         <div className="flex items-center gap-3">
           <span className="text-2xl">{ev.def.glyph}</span>
           <div className="min-w-0 flex-1">

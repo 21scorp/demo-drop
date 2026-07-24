@@ -4,6 +4,11 @@
 Supernova, do it again — bigger. Fully client-side, free to host, monetizes via ads +
 a Supporter Pack.
 
+> **Status: v1.0 shipped.** All phases 0–7 complete; Phase 8 depth delivered a second
+> prestige layer (Singularity), Cosmic Events, share card, PWA, and 37 achievements.
+> 64 tests green, production build clean, validated in-browser (desktop + mobile).
+> See [CHANGELOG.md](../CHANGELOG.md). Remaining items below are optional future depth.
+
 Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 0 — Foundation

@@ -27,6 +27,7 @@ function UpgradeCard({ def }: { def: UpgradeDef }) {
     <button
       onClick={() => store.buyUpgrade(def.id)}
       disabled={!affordable}
+      aria-label={`Buy upgrade ${def.name} for ${fmt(def.cost, notation)} energy: ${def.blurb}`}
       className={cn(
         "flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all",
         affordable

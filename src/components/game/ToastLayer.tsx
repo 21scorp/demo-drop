@@ -37,7 +37,12 @@ export function ToastLayer() {
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-4 z-[70] flex flex-col items-center gap-2 px-4">
+    <div
+      role="status"
+      aria-live="polite"
+      aria-atomic="false"
+      className="pointer-events-none fixed inset-x-0 top-4 z-[70] flex flex-col items-center gap-2 px-4"
+    >
       {store.toasts.map((t) => (
         <div
           key={t.id}

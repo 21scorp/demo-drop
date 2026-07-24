@@ -61,6 +61,7 @@ function GeneratorRow({
     <button
       onClick={() => store.buyGenerator(def.id, mode === "max" ? Infinity : mode)}
       disabled={!affordable}
+      aria-label={`Buy ${mode === "max" ? `${qty} (max)` : qty} ${def.name} for ${fmt(cost, notation)} energy`}
       className={cn(
         "group relative flex w-full items-center gap-3 overflow-hidden rounded-xl border p-3 text-left transition-all",
         affordable
