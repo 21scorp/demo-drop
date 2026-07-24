@@ -7,6 +7,7 @@ import { EventBanner } from "./EventBanner";
 import { FlareLayer } from "./FlareLayer";
 import { GameShell } from "./GameShell";
 import { useStore } from "./GameProvider";
+import { HelpButton } from "./HelpButton";
 import { Hud } from "./Hud";
 import { OfflineModal } from "./OfflineModal";
 import { Starfield } from "./Starfield";
@@ -32,6 +33,7 @@ export function PlayScreen() {
           </Link>
           <div className="flex items-center gap-2">
             <DailyButton />
+            <HelpButton />
             <Link
               href="/"
               className="rounded-lg px-3 py-1.5 text-sm text-muted transition-colors hover:text-ink"

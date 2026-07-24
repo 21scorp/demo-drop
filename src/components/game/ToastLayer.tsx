@@ -41,7 +41,7 @@ export function ToastLayer() {
       role="status"
       aria-live="polite"
       aria-atomic="false"
-      className="pointer-events-none fixed inset-x-0 top-4 z-[70] flex flex-col items-center gap-2 px-4"
+      className="pointer-events-none fixed right-3 top-[7.75rem] z-[70] flex max-w-[calc(100%-1.5rem)] flex-col items-end gap-2 sm:max-w-sm"
     >
       {store.toasts.map((t) => (
         <div
