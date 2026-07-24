@@ -122,6 +122,14 @@ export class AudioEngine {
     );
   }
 
+  /** Light rising arpeggio when you break into a new scale (K → M → B → …). */
+  milestone() {
+    if (!this.ensure()) return;
+    [523.25, 783.99, 1046.5].forEach((f, i) =>
+      this.note(f, { dur: 0.18, type: "sine", gain: 0.18, when: i * 0.06 }),
+    );
+  }
+
   prestige() {
     if (!this.ensure()) return;
     // Descending "collapse" then rising "rebirth".

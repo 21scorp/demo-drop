@@ -32,6 +32,7 @@ import {
   supernova as engSupernova,
   tapPower as engTapPower,
 } from "./engine";
+import { fmt } from "./format";
 import {
   clearStorage,
   exportSave as engExport,
@@ -103,6 +104,7 @@ export class GameStore {
   private nextFlareAt = 0;
   private nextEventAt = 0;
   private knownGenerators = new Set<string>();
+  private lastScaleTier = 0;
   private idSeq = 1;
   private listeners = new Set<() => void>();
   private tick = 0;
@@ -124,6 +126,7 @@ export class GameStore {
       const ctx = buildUnlockCtx(this.state);
       for (const g of CONFIG.generators) if (g.unlock(ctx)) this.knownGenerators.add(g.id);
     }
+    this.lastScaleTier = this.scaleTier(this.state.lifetimeEnergy);
     if (loaded) this.applyOffline(this.now);
     this.evaluateDaily(this.now);
   }
@@ -264,10 +267,11 @@ export class GameStore {
     // (toasts self-expire in UI; we cap the array)
     if (this.toasts.length > 6) this.toasts = this.toasts.slice(-6);
 
-    // Achievements + new-tier unlocks (throttled to commits)
+    // Achievements + new-tier unlocks + scale milestones (throttled to commits)
     if (perfNow - this.lastCommit >= COMMIT_INTERVAL_MS) {
       this.scanAchievements();
       this.checkGeneratorUnlocks();
+      this.checkScaleMilestone();
       this.recompute();
       this.lastCommit = perfNow;
       this.notify();
@@ -496,6 +500,29 @@ export class GameStore {
   }
 
   /* ── achievements ──────────────────────────────────────────────────────── */
+
+  /** Order-of-1000 tier of a value (0 = <1K, 1 = K, 2 = M, …). */
+  private scaleTier(v: number): number {
+    if (v < 1000) return 0;
+    return Math.floor(Math.log10(v) / 3);
+  }
+
+  private checkScaleMilestone() {
+    const tier = this.scaleTier(this.state.lifetimeEnergy);
+    if (tier > this.lastScaleTier && tier >= 1) {
+      this.lastScaleTier = tier;
+      const scale = Math.pow(10, tier * 3);
+      this.pushToast({
+        kind: "info",
+        title: `New scale reached: ${fmt(scale)}`,
+        body: "The numbers keep climbing. Keep going.",
+        glyph: "📈",
+      });
+      this.audio.milestone();
+    } else if (tier > this.lastScaleTier) {
+      this.lastScaleTier = tier;
+    }
+  }
 
   private checkGeneratorUnlocks() {
     const ctx = buildUnlockCtx(this.state);
