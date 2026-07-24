@@ -97,6 +97,7 @@ export class GameStore {
   private comboExpires = 0;
   private nextFlareAt = 0;
   private nextEventAt = 0;
+  private knownGenerators = new Set<string>();
   private idSeq = 1;
   private listeners = new Set<() => void>();
   private tick = 0;
@@ -113,6 +114,11 @@ export class GameStore {
     this.derived = computeDerived(this.state, CONFIG);
     this.scheduleNextFlare(this.now);
     this.scheduleNextEvent(this.now, true);
+    // Remember which generators are already unlocked so we only celebrate NEW ones.
+    {
+      const ctx = buildUnlockCtx(this.state);
+      for (const g of CONFIG.generators) if (g.unlock(ctx)) this.knownGenerators.add(g.id);
+    }
     if (loaded) this.applyOffline(this.now);
     this.evaluateDaily(this.now);
   }
@@ -253,9 +259,10 @@ export class GameStore {
     // (toasts self-expire in UI; we cap the array)
     if (this.toasts.length > 6) this.toasts = this.toasts.slice(-6);
 
-    // Achievements (cheap enough per frame at this scale, but throttle to commits)
+    // Achievements + new-tier unlocks (throttled to commits)
     if (perfNow - this.lastCommit >= COMMIT_INTERVAL_MS) {
       this.scanAchievements();
+      this.checkGeneratorUnlocks();
       this.recompute();
       this.lastCommit = perfNow;
       this.notify();
@@ -484,6 +491,22 @@ export class GameStore {
   }
 
   /* ── achievements ──────────────────────────────────────────────────────── */
+
+  private checkGeneratorUnlocks() {
+    const ctx = buildUnlockCtx(this.state);
+    for (const g of CONFIG.generators) {
+      if (!this.knownGenerators.has(g.id) && g.unlock(ctx)) {
+        this.knownGenerators.add(g.id);
+        this.pushToast({
+          kind: "unlock",
+          title: `New: ${g.name}`,
+          body: g.blurb,
+          glyph: g.glyph,
+        });
+        this.audio.achievement();
+      }
+    }
+  }
 
   private scanAchievements() {
     const fresh = newlyUnlockedAchievements(this.state, CONFIG);
