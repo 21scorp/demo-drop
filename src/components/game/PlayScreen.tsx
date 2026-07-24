@@ -5,13 +5,20 @@ import { Core } from "./Core";
 import { DailyButton } from "./DailyButton";
 import { FlareLayer } from "./FlareLayer";
 import { GameShell } from "./GameShell";
+import { useStore } from "./GameProvider";
 import { Hud } from "./Hud";
 import { OfflineModal } from "./OfflineModal";
+import { Starfield } from "./Starfield";
 import { ToastLayer } from "./ToastLayer";
 
 export function PlayScreen() {
+  const store = useStore();
+  const reduced = store.state.settings.reducedMotion;
   return (
     <div className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-bg">
+      <div className="pointer-events-none absolute inset-0">
+        <Starfield reduced={reduced} />
+      </div>
       <div className="pointer-events-none absolute inset-0 bg-brand-glow opacity-70" />
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.35]" />
 

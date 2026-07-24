@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Starfield } from "@/components/game/Starfield";
 import { GENERATORS } from "@/lib/game/config";
 
 function CoreVisual() {
@@ -42,6 +43,9 @@ function Feature({ glyph, title, body }: { glyph: string; title: string; body: s
 export default function Home() {
   return (
     <div className="relative overflow-hidden bg-bg">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[100vh]">
+        <Starfield />
+      </div>
       <div className="pointer-events-none absolute inset-0 bg-brand-glow" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[70vh] bg-grid opacity-40" />
 

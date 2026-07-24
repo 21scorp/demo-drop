@@ -121,6 +121,10 @@ export function Core() {
   const eps = store.liveEps();
   const tapPower = store.liveTapPower();
   const combo = store.combo;
+  const firstTime = store.state.taps === 0;
+  const frenzy = store.buffs.some((b) => b.kind === "frenzy");
+  const tapstorm = store.buffs.some((b) => b.kind === "tapstorm");
+  const glow = frenzy ? "#f59e0b" : tapstorm ? "#a3e635" : colors[0];
   const comboPct = Math.min(1, combo / (20 + (store.state.skills.momentum ?? 0) * 5));
 
   // Pulse speed scales gently with production (more alive when richer).
@@ -161,12 +165,14 @@ export function Core() {
         className="group relative grid aspect-square w-[min(58vw,300px)] place-items-center rounded-full outline-none"
         style={{ touchAction: "manipulation" }}
       >
-        {/* outer glow */}
+        {/* outer glow (tints during buffs) */}
         <span
-          className="absolute inset-[-18%] rounded-full opacity-60 blur-2xl"
+          className="absolute inset-[-18%] rounded-full opacity-60 blur-2xl transition-[background] duration-500"
           style={{
-            background: `radial-gradient(circle, ${colors[0]}, transparent 70%)`,
-            animation: reduced ? undefined : `pulseGlow ${pulseDur}s ease-in-out infinite`,
+            background: `radial-gradient(circle, ${glow}, transparent 70%)`,
+            animation: reduced
+              ? undefined
+              : `pulseGlow ${frenzy || tapstorm ? Math.max(0.9, pulseDur * 0.5) : pulseDur}s ease-in-out infinite`,
           }}
         />
         {/* rotating halo */}
@@ -192,11 +198,19 @@ export function Core() {
       </button>
 
       {/* under-core readout */}
-      <div className="z-10 flex flex-col items-center gap-0.5">
-        <span className="font-mono text-xs uppercase tracking-widest text-faint">per tap</span>
-        <span className="font-mono text-lg font-semibold text-ink tabular-nums">
-          +{fmt(tapPower)}
-        </span>
+      <div className="z-10 flex min-h-[2.75rem] flex-col items-center gap-0.5">
+        {firstTime ? (
+          <span className="animate-pulse font-mono text-sm font-semibold tracking-wide text-brand">
+            ✨ Tap the star to begin
+          </span>
+        ) : (
+          <>
+            <span className="font-mono text-xs uppercase tracking-widest text-faint">per tap</span>
+            <span className="font-mono text-lg font-semibold text-ink tabular-nums">
+              +{fmt(tapPower)}
+            </span>
+          </>
+        )}
       </div>
 
       <style>{`

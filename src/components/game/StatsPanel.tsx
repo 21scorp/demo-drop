@@ -1,6 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import { CONFIG } from "@/lib/game/config";
 import { fmt, fmtDuration, fmtInt, fmtRate } from "@/lib/game/format";
+import { shareCard } from "@/lib/game/shareCard";
+import { Button } from "@/components/ui/Button";
 import { useGameTick, useStore } from "./GameProvider";
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -17,10 +21,36 @@ export function StatsPanel() {
   const store = useStore();
   const s = store.state;
   const n = s.settings.notation;
+  const [shareMsg, setShareMsg] = useState<string | null>(null);
+
+  const onShare = async () => {
+    const skin = CONFIG.skins.find((k) => k.id === s.skin);
+    try {
+      const result = await shareCard({
+        lifetimeEnergy: s.lifetimeEnergy,
+        supernovaCount: s.supernovaCount,
+        bestEnergyPerSec: s.stats.bestEnergyPerSec,
+        achievements: s.achievements.length,
+        achievementsTotal: CONFIG.achievements.length,
+        skinColors: skin?.colors ?? ["#c4b5fd", "#7c3aed", "#2e1065"],
+        url: typeof window !== "undefined" ? window.location.origin : "supernova.game",
+      });
+      setShareMsg(result === "shared" ? "Shared!" : "Image downloaded — post it anywhere.");
+    } catch {
+      setShareMsg("Could not create the image.");
+    }
+    setTimeout(() => setShareMsg(null), 3000);
+  };
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Statistics</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">Statistics</h2>
+        <Button size="sm" variant="secondary" onClick={onShare}>
+          🖼️ Share
+        </Button>
+      </div>
+      {shareMsg && <p className="text-xs text-accent">{shareMsg}</p>}
       <div className="grid grid-cols-2 gap-2">
         <Stat label="Energy/sec" value={fmtRate(store.liveEps(), n)} />
         <Stat label="Best energy/sec" value={fmtRate(s.stats.bestEnergyPerSec, n)} />

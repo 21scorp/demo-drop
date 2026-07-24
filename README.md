@@ -7,7 +7,9 @@
 A hypnotic, deeply juicy **idle / incremental game** built to be played — and to make
 money — with zero backend and zero running cost.
 
-![SUPERNOVA gameplay](docs/media/screenshot-play.png)
+![SUPERNOVA landing](docs/media/screenshot-landing.png)
+
+<img src="docs/media/screenshot-play.png" width="49%" alt="Gameplay" /> <img src="docs/media/screenshot-mobile.png" width="24%" alt="Mobile" />
 
 </div>
 
