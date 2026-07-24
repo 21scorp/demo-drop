@@ -40,9 +40,27 @@ function Feature({ glyph, title, body }: { glyph: string; title: string; body: s
   );
 }
 
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  name: "SUPERNOVA",
+  description:
+    "A free browser idle game. Tap a spark, build a universe, catch Solar Flares, and go Supernova.",
+  genre: ["Idle", "Incremental", "Clicker"],
+  applicationCategory: "Game",
+  operatingSystem: "Any (web browser)",
+  playMode: "SinglePlayer",
+  gamePlatform: "Web Browser",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
 export default function Home() {
   return (
     <div className="relative overflow-hidden bg-bg">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[100vh]">
         <Starfield />
       </div>
@@ -60,9 +78,9 @@ export default function Home() {
             <a href="#how" className="hidden rounded-lg px-3 py-2 text-muted hover:text-ink sm:block">
               How it works
             </a>
-            <a href="#loop" className="hidden rounded-lg px-3 py-2 text-muted hover:text-ink sm:block">
-              The loop
-            </a>
+            <Link href="/guide" className="hidden rounded-lg px-3 py-2 text-muted hover:text-ink sm:block">
+              Guide
+            </Link>
             <Link
               href="/play"
               className="rounded-lg bg-brand px-4 py-2 font-medium text-brand-ink transition-colors hover:bg-brand/90"
@@ -197,7 +215,15 @@ export default function Home() {
             <span>✦</span>
             <span className="font-semibold text-muted">SUPERNOVA</span>
           </div>
-          <p>Built to be played. © {new Date().getFullYear()}</p>
+          <div className="flex items-center gap-5">
+            <Link href="/guide" className="hover:text-ink">
+              Strategy guide
+            </Link>
+            <Link href="/play" className="hover:text-ink">
+              Play
+            </Link>
+            <span>© {new Date().getFullYear()}</span>
+          </div>
         </div>
       </footer>
     </div>

@@ -6,5 +6,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: APP_URL, changeFrequency: "weekly", priority: 1 },
     { url: `${APP_URL}/play`, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${APP_URL}/guide`, changeFrequency: "monthly", priority: 0.7 },
   ];
 }
