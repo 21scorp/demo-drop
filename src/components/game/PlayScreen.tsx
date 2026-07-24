@@ -10,6 +10,7 @@ import { useStore } from "./GameProvider";
 import { HelpButton } from "./HelpButton";
 import { Hud } from "./Hud";
 import { OfflineModal } from "./OfflineModal";
+import { PrestigeFlash } from "./PrestigeFlash";
 import { Starfield } from "./Starfield";
 import { ToastLayer } from "./ToastLayer";
 
@@ -60,6 +61,7 @@ export function PlayScreen() {
       <EventBanner />
       <FlareLayer />
       <ToastLayer />
+      <PrestigeFlash />
       <OfflineModal />
     </div>
   );

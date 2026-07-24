@@ -90,6 +90,8 @@ export class GameStore {
   combo = 0;
   comboMult = 1;
   pendingOffline: OfflineReport | null = null;
+  /** Transient: set on the moment of a prestige so the UI can celebrate it. */
+  lastPrestige: { at: number; kind: "nova" | "singularity"; gain: number } | null = null;
 
   private audio: AudioEngine;
   private now: number;
@@ -619,6 +621,7 @@ export class GameStore {
     this.comboMult = 1;
     this.buffs = [];
     this.flares = [];
+    this.lastPrestige = { at: Date.now(), kind: "nova", gain };
     this.audio.prestige();
     this.pushToast({
       kind: "prestige",
@@ -650,6 +653,7 @@ export class GameStore {
     this.buffs = [];
     this.flares = [];
     this.activeEvent = null;
+    this.lastPrestige = { at: Date.now(), kind: "singularity", gain };
     this.audio.prestige();
     this.pushToast({
       kind: "prestige",
