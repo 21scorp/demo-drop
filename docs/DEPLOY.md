@@ -35,6 +35,26 @@ docker build -t supernova .
 docker run -p 3000:3000 supernova
 ```
 
+## Option D — Static export for game portals (itch.io, GameDistribution, Poki…)
+
+The game is 100% client-side, so it can be shipped as a plain folder of static
+files — perfect for game portals that take ad-revenue-shared uploads and send you
+real traffic.
+
+```bash
+npm run build:static     # produces ./out — a complete static site
+```
+
+Then:
+- **itch.io**: zip the contents of `out/`, upload as an HTML game, set the viewport
+  and mark "This file will be played in the browser". (Entry is `index.html`; the
+  game itself is `play.html`.)
+- **Netlify Drop / Cloudflare Pages / GitHub Pages / S3+CloudFront**: upload `out/`.
+- **GameDistribution / Poki**: follow their HTML5 upload flow with the `out/` bundle.
+
+Note: the static build skips server-only security headers — set those at your host/CDN
+if needed. Set `NEXT_PUBLIC_APP_URL` before building so absolute URLs are correct.
+
 ## Environment variables (all optional)
 
 | Variable | Purpose |
