@@ -9,6 +9,7 @@
 /.next/
 /out/
 /build
+/dist-embed
 next-env.d.ts
 
 # production
