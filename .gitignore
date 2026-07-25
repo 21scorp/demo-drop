@@ -5,19 +5,40 @@
 /.pnp
 .pnp.js
 
-# testing
-/coverage
+# next.js
+/.next/
+/out/
+/build
+/dist-embed
+next-env.d.ts
 
 # production
 /build
 
+# testing
+/coverage
+
+# database (local SQLite — never commit real data)
+*.db
+*.db-journal
+/prisma/*.db
+/prisma/dev.db*
+
+# env — never commit secrets
+.env
+.env*.local
+.env.production
+
 # misc
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+*.pem
+*.tsbuildinfo
+.vercel
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# editors
+.idea
+.vscode

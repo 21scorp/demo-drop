@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Surfaces */
+    --bg: 234 27% 6%;
+    --surface: 233 23% 9%;
+    --surface-2: 232 20% 13%;
+    --border: 232 16% 20%;
+
+    /* Text */
+    --ink: 220 24% 96%;
+    --muted: 224 12% 68%;
+    --faint: 226 10% 46%;
+
+    /* Brand — electric violet */
+    --brand: 262 83% 64%;
+    --brand-soft: 262 83% 64%;
+    --brand-ink: 255 40% 98%;
+
+    /* Accent — acid lime */
+    --accent: 86 72% 56%;
+    --accent-soft: 86 72% 56%;
+
+    /* States */
+    --success: 152 58% 46%;
+    --warning: 38 92% 56%;
+    --danger: 2 78% 62%;
+
+    --radius: 0.9rem;
+
+    /* Font stacks (system-based, zero network cost, sharp everywhere) */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+      Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    --font-display: "SF Pro Display", ui-sans-serif, system-ui, -apple-system,
+      "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono", Menlo,
+      Consolas, "Liberation Mono", monospace;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: hsl(var(--bg));
+    color: hsl(var(--ink));
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: hsl(var(--brand) / 0.35);
+    color: hsl(var(--ink));
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--bg));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+    border: 2px solid hsl(var(--bg));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--faint));
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--brand));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Respect the OS-level reduced-motion preference everywhere. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-tight {
+    @apply container max-w-5xl;
+  }
+
+  .text-gradient {
+    background: linear-gradient(
+      100deg,
+      hsl(var(--ink)) 0%,
+      hsl(var(--ink)) 40%,
+      hsl(var(--brand)) 78%,
+      hsl(var(--accent)) 120%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .card {
+    @apply rounded-xl border border-border bg-surface shadow-card;
+  }
+
+  .hairline {
+    @apply border-b border-border/70;
+  }
+
+  /* Subtle animated grid backdrop */
+  .bg-grid {
+    background-image: theme("backgroundImage.grid-faint");
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(
+      120% 80% at 50% 0%,
+      black 30%,
+      transparent 75%
+    );
+    mask-image: radial-gradient(120% 80% at 50% 0%, black 30%, transparent 75%);
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden bg-surface-2;
+  }
+  .skeleton::after {
+    content: "";
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--border) / 0.6),
+      transparent
+    );
+    animation: shimmer 1.6s infinite;
+  }
+}
+
+@layer utilities {
+  .balance {
+    text-wrap: balance;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
